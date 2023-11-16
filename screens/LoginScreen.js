@@ -11,15 +11,15 @@ const LoginScreen = () => {
 
     const navigation = useNavigation()
 
-    // useEffect(() => {
-    //   const unsubscribe = auth.onAuthStateChanged(user => {
-    //     if (user) {
-    //       navigation.navigate("Home")
-    //     }
-    //   })
-
-    //   return unsubscribe
-    // }, [])
+    useEffect(() => {
+        const auth = getAuth();
+      auth.onAuthStateChanged(user => {
+        if (user) {
+            console.log('aWDawdasd')
+          navigation.navigate("Home")
+        }
+      })
+    }, [])
 
     const handleSignUp = () => {
         const auth = getAuth();
