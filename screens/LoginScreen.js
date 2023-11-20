@@ -2,33 +2,33 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import React, { useEffect, useState } from 'react'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
-
-
+import { db } from "../firebase";
+import { collection, addDoc, doc, updateDoc, getDocs, deleteDoc, setDoc } from "firebase/firestore";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
+    const [user, setUser] = useState()
+
     const navigation = useNavigation()
 
-    useEffect(() => {
-        const auth = getAuth();
-      auth.onAuthStateChanged(user => {
-        if (user) {
-            console.log('aWDawdasd')
-          navigation.navigate("Home")
-        }
-      })
-    }, [])
+    // useEffect(() => {
+    //     const auth = getAuth();
+    //   auth.onAuthStateChanged(user => {
+    //     if (user) {
+    //         console.log('aWDawdasd')
+    //       navigation.navigate("Home")
+    //     }
+    //   })
+    // }, [])
 
     const handleSignUp = () => {
         const auth = getAuth();
         console.log(auth)
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        // ...
+            {addToDatabase(userCredential.user.uid)}
         })
         .catch((error) => {
         const errorCode = error.code;
@@ -36,6 +36,16 @@ const LoginScreen = () => {
         // ..
         });
     }
+
+    const addToDatabase = async(userID) => {
+        await setDoc(doc(db, "users", userID), {
+            name: "Los Angeles",
+            state: "CA",
+            country: "USA"
+        });
+    }
+
+    
 
     const handleLogin = () => {
       const auth = getAuth();
