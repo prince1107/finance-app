@@ -10,15 +10,27 @@ const AddStockScreen = () => {
   const [tickerSym, setTickerSym] = useState("")
   const [price, setPrice] = useState("")
   const [shares, setShares] = useState("")
+  const [uid, setUID] = useState("")
 
   useEffect(() => {
     const auth = getAuth();
     auth.onAuthStateChanged(user => {
       if (user) {
         console.log(user.uid)
+        setUID(user.uid)
       }
     })
   }, [])
+
+  const addToDatabase = async(UserID, Current) => {
+    console.log("HELLO")
+    await setDoc(doc(db, "users", UserID, "Investments", "stock1"), {
+      ticker: tickerSym,
+      priceBought: parseFloat(price),
+      sharesBought: parseInt(shares),
+      currentPrice: parseFloat(Current),
+    });
+  }
 
   const handleButtonClick = async(event) => {
     console.log(tickerSym)
@@ -37,16 +49,17 @@ const AddStockScreen = () => {
         'X-RapidAPI-Host': 'alpha-vantage.p.rapidapi.com'
       }
     };
-    setTickerSym("")
-    setPrice("")
-    setShares("")
     try {
       const response = await axios.request(options);
       console.log(response.data);
       console.log(response.data['Global Quote']['05. price']);
+      addToDatabase(uid,response.data['Global Quote']['05. price'])
     } catch (error) {
       console.error(error);
     }
+    setTickerSym("")
+    setPrice("")
+    setShares("")
   }
 
   return (
