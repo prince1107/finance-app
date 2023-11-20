@@ -1,11 +1,24 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
+import { db } from "../firebase";
+import { collection, addDoc, doc, updateDoc, getDocs, deleteDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
 
 const AddStockScreen = () => {
   const [tickerSym, setTickerSym] = useState("")
   const [price, setPrice] = useState("")
   const [shares, setShares] = useState("")
+
+  useEffect(() => {
+    const auth = getAuth();
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        console.log(user.uid)
+      }
+    })
+  }, [])
 
   const handleButtonClick = async(event) => {
     console.log(tickerSym)
@@ -15,8 +28,7 @@ const AddStockScreen = () => {
       method: 'GET',
       url: 'https://alpha-vantage.p.rapidapi.com/query',
       params: {
-        interval: '5min',
-        function: 'TIME_SERIES_INTRADAY',
+        function: 'TIME_SERIES_DAILY_ADJUSTED',
         symbol: tickerSym,
         datatype: 'json',
         output_size: 'compact'
@@ -26,15 +38,15 @@ const AddStockScreen = () => {
         'X-RapidAPI-Host': 'alpha-vantage.p.rapidapi.com'
       }
     };
-    setTickerSym("")
-    setPrice("")
-    setShares("")
     try {
       const response = await axios.request(options);
       console.log(response.data);
     } catch (error) {
       console.error(error);
     }
+    setTickerSym("")
+    setPrice("")
+    setShares("")
   }
 
   return (

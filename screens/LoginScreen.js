@@ -9,8 +9,6 @@ const LoginScreen = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const [user, setUser] = useState()
-
     const navigation = useNavigation()
 
     // useEffect(() => {
@@ -39,10 +37,7 @@ const LoginScreen = () => {
 
     const addToDatabase = async(userID) => {
         await setDoc(doc(db, "users", userID), {
-            name: "Los Angeles",
-            state: "CA",
-            country: "USA"
-        });
+        await setDoc(doc(db, "users", userID, "Investments", "stock1"), {});
     }
 
     
