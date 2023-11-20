@@ -28,25 +28,25 @@ const AddStockScreen = () => {
       method: 'GET',
       url: 'https://alpha-vantage.p.rapidapi.com/query',
       params: {
-        function: 'TIME_SERIES_DAILY_ADJUSTED',
-        symbol: tickerSym,
-        datatype: 'json',
-        output_size: 'compact'
+          function: 'GLOBAL_QUOTE',
+          symbol: tickerSym,
+          datatype: 'json'
       },
       headers: {
         'X-RapidAPI-Key': '22759959d0msh6518744796a1e45p181763jsn6852499fe9ca',
         'X-RapidAPI-Host': 'alpha-vantage.p.rapidapi.com'
       }
     };
-    try {
-      const response = await axios.request(options);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
     setTickerSym("")
     setPrice("")
     setShares("")
+    try {
+      const response = await axios.request(options);
+      console.log(response.data);
+      console.log(response.data['Global Quote']['05. price']);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
