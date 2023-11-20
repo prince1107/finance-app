@@ -36,7 +36,6 @@ const LoginScreen = () => {
     }
 
     const addToDatabase = async(userID) => {
-        await setDoc(doc(db, "users", userID), {
         await setDoc(doc(db, "users", userID, "Investments", "stock1"), {});
     }
 
